@@ -1,25 +1,21 @@
 
-
 import streamlit as st
-import pandas as pd
 import numpy as np
 import joblib
 import shap
+import matplotlib.pyplot as plt  # Needed for SHAP plots
 
 st.set_page_config(page_title="MediPredict Pro", page_icon="🧑‍⚕️", layout="wide")
 
 st.title("🧑‍⚕️ MediPredict Pro")
 st.markdown("### Multi-Disease Risk Prediction with Explainable AI")
 
-base_path = './'
-
 @st.cache_resource
 def load_model(disease):
-    model = joblib.load(f'models/{disease}_model.pkl')
-    scaler = joblib.load(f'models/{disease}_scaler.pkl')
+    model = joblib.load(f"models/{disease}_model.pkl")
+    scaler = joblib.load(f"models/{disease}_scaler.pkl")
     return model, scaler
 
-# Sidebar always visible
 disease = st.sidebar.selectbox(
     "Choose Disease",
     ("Diabetes", "Heart Disease", "Liver Cirrhosis Stage", "Parkinson's Disease")
@@ -32,15 +28,15 @@ if disease == "Diabetes":
 
     col1, col2 = st.columns(2)
     with col1:
-        pregnancies = st.slider("Pregnancies", 0, 17, 3, key="preg")
-        glucose = st.slider("Glucose", 0, 200, 120, key="glu")
-        bp = st.slider("Blood Pressure", 0, 122, 70, key="bp")
-        skin = st.slider("Skin Thickness", 0, 99, 20, key="skin")
+        pregnancies = st.slider("Pregnancies", 0, 17, 3)
+        glucose = st.slider("Glucose", 0, 200, 120)
+        bp = st.slider("Blood Pressure", 0, 122, 70)
+        skin = st.slider("Skin Thickness", 0, 99, 20)
     with col2:
-        insulin = st.slider("Insulin", 0, 846, 80, key="ins")
-        bmi = st.slider("BMI", 0.0, 67.1, 32.0, step=0.1, key="bmi")
-        dpf = st.slider("Diabetes Pedigree Function", 0.078, 2.42, 0.5, step=0.01, key="dpf")
-        age = st.slider("Age", 21, 81, 29, key="age")
+        insulin = st.slider("Insulin", 0, 846, 80)
+        bmi = st.slider("BMI", 0.0, 67.1, 32.0, step=0.1)
+        dpf = st.slider("Diabetes Pedigree Function", 0.078, 2.42, 0.5, step=0.01)
+        age = st.slider("Age", 21, 81, 29)
 
     features = np.array([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]])
     scaled = scaler.transform(features)
@@ -56,7 +52,7 @@ if disease == "Diabetes":
         explainer = shap.Explainer(model)
         shap_values = explainer(scaled)
         st.subheader("Why this prediction?")
-        shap.plots.waterfall(shap_values[0])
+        shap.plots.waterfall(shap_values[0], show=True)
 
 # ---------------- Heart Disease ----------------
 elif disease == "Heart Disease":
@@ -65,19 +61,20 @@ elif disease == "Heart Disease":
 
     col1, col2 = st.columns(2)
     with col1:
-        age = st.slider("Age", 20, 100, 50, key="age_h")
-        sex = st.selectbox("Sex", ("Male", "Female"), key="sex_h")
+        age = st.slider("Age", 20, 100, 50)
+        sex = st.selectbox("Sex", ("Male", "Female"))
         sex = 1 if sex == "Male" else 0
-        cp = st.selectbox("Chest Pain Type", ("Typical Angina", "Atypical Angina", "Non-Anginal", "Asymptomatic"), key="cp_h")
+        cp = st.selectbox("Chest Pain Type", ("Typical Angina", "Atypical Angina", "Non-Anginal", "Asymptomatic"))
         cp = ["Typical Angina", "Atypical Angina", "Non-Anginal", "Asymptomatic"].index(cp)
-        trestbps = st.slider("Resting BP", 90, 200, 120, key="trestbps")
+        trestbps = st.slider("Resting BP", 90, 200, 120)
     with col2:
-        chol = st.slider("Cholesterol", 100, 600, 200, key="chol")
-        thalach = st.slider("Max Heart Rate", 70, 220, 150, key="thalach")
-        exang = st.selectbox("Exercise Induced Angina", ("No", "Yes"), key="exang_h")
+        chol = st.slider("Cholesterol", 100, 600, 200)
+        thalach = st.slider("Max Heart Rate", 70, 220, 150)
+        exang = st.selectbox("Exercise Induced Angina", ("No", "Yes"))
         exang = 1 if exang == "Yes" else 0
-        oldpeak = st.slider("ST Depression", 0.0, 6.2, 1.0, step=0.1, key="oldpeak")
+        oldpeak = st.slider("ST Depression", 0.0, 6.2, 1.0, step=0.1)
 
+    # Keep features consistent with your training pipeline (8 common features)
     features = np.array([[age, sex, cp, trestbps, chol, thalach, exang, oldpeak]])
     scaled = scaler.transform(features)
 
@@ -92,19 +89,25 @@ elif disease == "Heart Disease":
         explainer = shap.Explainer(model)
         shap_values = explainer(scaled)
         st.subheader("Why this prediction?")
-        shap.plots.waterfall(shap_values[0])
+        shap.plots.waterfall(shap_values[0], show=True)
 
 # ---------------- Liver Cirrhosis ----------------
 elif disease == "Liver Cirrhosis Stage":
     st.header("Liver Cirrhosis Stage Prediction")
     model, scaler = load_model("cirrhosis")
 
+    # Define all variables used in features
     bilirubin = st.slider("Bilirubin", 0.0, 10.0, 1.2, step=0.1)
     albumin = st.slider("Albumin", 1.0, 6.0, 3.5, step=0.1)
     protime = st.slider("Prothrombin Time", 10, 20, 12)
     ascites = st.selectbox("Ascites", ("No", "Yes"))
     ascites = 1 if ascites == "Yes" else 0
+    age = st.slider("Age", 20, 90, 50)
+    edema = st.selectbox("Edema", ("No", "Yes"))
+    edema = 1 if edema == "Yes" else 0
+    stage = st.slider("Stage", 1, 4, 2)
 
+    # Match your scaler’s training feature order/count
     features = np.array([[bilirubin, albumin, protime, ascites, age, edema, stage]])
     scaled = scaler.transform(features)
 
@@ -115,19 +118,21 @@ elif disease == "Liver Cirrhosis Stage":
         explainer = shap.Explainer(model)
         shap_values = explainer(scaled)
         st.subheader("Why this prediction?")
-        shap.plots.waterfall(shap_values[0])
+        shap.plots.waterfall(shap_values[0], show=True)
 
 # ---------------- Parkinson's ----------------
 elif disease == "Parkinson's Disease":
     st.header("Parkinson's Disease Risk Prediction")
     model, scaler = load_model("parkinsons")
 
+    # Minimal subset—ensure these match your training pipeline
     mdvp_fo = st.slider("MDVP:Fo(Hz)", 80.0, 300.0, 150.0, step=0.1)
-    jitter = st.slider("Jitter(%)", 0.0, 1.0, 0.005, step=0.001)
-    shimmer = st.slider("Shimmer", 0.0, 1.0, 0.02, step=0.001)
-    nhr = st.slider("NHR", 0.0, 1.0, 0.02, step=0.001)
+    jitter = st.slider("Jitter(%)", 0.0, 1.0, 0.11, step=0.001)
+    shimmer = st.slider("Shimmer", 0.0, 1.0, 0.06, step=0.001)
+    nhr = st.slider("NHR", 0.0, 1.0, 0.06, step=0.001)
 
-    features = np.array([[mdvp_fo, jitter, shimmer, nhr, spread1, spread2, PPE]])
+    # If your scaler expects more features, add them here and define sliders
+    features = np.array([[mdvp_fo, jitter, shimmer, nhr]])
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
@@ -141,8 +146,9 @@ elif disease == "Parkinson's Disease":
         explainer = shap.Explainer(model)
         shap_values = explainer(scaled)
         st.subheader("Why this prediction?")
-        shap.plots.waterfall(shap_values[0])
+        shap.plots.waterfall(shap_values[0], show=True)
 
 # ---------------- Footer ----------------
 st.markdown("---")
 st.caption("Built by you | XGBoost + SHAP")
+
