@@ -95,21 +95,7 @@ elif disease == "Heart Disease":
         st.subheader("Why this prediction?")
         shap.plots.waterfall(shap_values[0], show=True)
 
-# ---------------- Liver Cirrhosis ----------------
-elif disease == "Liver Cirrhosis Stage":
-    st.header("Liver Cirrhosis Stage Prediction")
-    model, scaler = load_model("cirrhosis")
-
-    # Define all variables used in features
-    bilirubin = st.slider("Bilirubin", 0.0, 10.0, 1.2, step=0.1)
-    albumin = st.slider("Albumin", 1.0, 6.0, 3.5, step=0.1)
-    protime = st.slider("Prothrombin Time", 10, 20, 12)
-    ascites = st.selectbox("Ascites", ("No", "Yes"))
-    ascites = 1 if ascites == "Yes" else 0
-    age = st.slider("Age", 20, 90, 50)
-    edema = st.selectbox("Edema", ("No", "Yes"))
-    edema = 1 if edema == "Yes" else 0
-    stage = st.slider("Stage", 1, 4, 2)
+# ---------------- Liver Cirrhosis ---------------
 
     # Match your scaler’s training feature order/count
     features = np.array([[bilirubin, albumin, protime, ascites, age, edema, stage]])
