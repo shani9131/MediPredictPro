@@ -78,7 +78,7 @@ elif disease == "Heart Disease":
         exang = 1 if exang == "Yes" else 0
         oldpeak = st.slider("ST Depression", 0.0, 6.2, 1.0, step=0.1, key="oldpeak")
 
-    features = np.array([[age, sex, cp, trestbps, chol, 0, 0, thalach, exang, oldpeak, 0, 0, 0]])
+    features = np.array([[age, sex, cp, trestbps, chol, thalach, exang, oldpeak]])
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
@@ -105,7 +105,7 @@ elif disease == "Liver Cirrhosis Stage":
     ascites = st.selectbox("Ascites", ("No", "Yes"))
     ascites = 1 if ascites == "Yes" else 0
 
-    features = np.array([[bilirubin, albumin, protime, ascites]])
+    features = np.array([[bilirubin, albumin, protime, ascites, age, edema, stage]])
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
@@ -127,7 +127,7 @@ elif disease == "Parkinson's Disease":
     shimmer = st.slider("Shimmer", 0.0, 1.0, 0.02, step=0.001)
     nhr = st.slider("NHR", 0.0, 1.0, 0.02, step=0.001)
 
-    features = np.array([[mdvp_fo, jitter, shimmer, nhr]])
+    features = np.array([[mdvp_fo, jitter, shimmer, nhr, spread1, spread2, PPE]])
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
