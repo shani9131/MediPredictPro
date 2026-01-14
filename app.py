@@ -136,7 +136,36 @@ elif disease == "Parkinson's Disease":
     jitter = st.slider("Jitter(%)", 0.0, 1.0, 0.11, step=0.001)
     shimmer = st.slider("Shimmer", 0.0, 1.0, 0.06, step=0.001)
     nhr = st.slider("NHR", 0.0, 1.0, 0.06, step=0.001)
+    elif disease == "Parkinson's Disease":
+    st.header("Parkinson's Disease Risk Prediction")
+    model, scaler = load_model("parkinsons")
 
+    mdvp_fo = st.slider("MDVP:Fo(Hz)", 80.0, 300.0, 150.0, step=0.1)
+    mdvp_fhi = st.slider("MDVP:Fhi(Hz)", 100.0, 400.0, 200.0, step=0.1)
+    mdvp_flo = st.slider("MDVP:Flo(Hz)", 60.0, 200.0, 100.0, step=0.1)
+    jitter = st.slider("Jitter(%)", 0.0, 1.0, 0.11, step=0.001)
+    shimmer = st.slider("Shimmer", 0.0, 1.0, 0.06, step=0.001)
+    nhr = st.slider("NHR", 0.0, 1.0, 0.06, step=0.001)
+    spread1 = st.slider("Spread1", -7.0, -0.1, -4.0, step=0.1)
+    PPE = st.slider("PPE", 0.0, 1.0, 0.3, step=0.01)
+
+    features = np.array([[mdvp_fo, mdvp_fhi, mdvp_flo, jitter, shimmer, nhr, spread1, PPE]])
+    st.write("Input shape:", features.shape)
+    st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
+    scaled = scaler.transform(features)
+
+    if st.button("Predict"):
+        pred = model.predict(scaled)[0]
+        prob = model.predict_proba(scaled)[0][1] * 100
+        if pred == 1:
+            st.error(f"High Risk of Parkinson's ({prob:.1f}% probability)")
+        else:
+            st.success(f"Low Risk ({100-prob:.1f}% probability)")
+
+        explainer = shap.Explainer(model)
+        shap_values = explainer(scaled)
+        st.subheader("Why this prediction?")
+        shap.plots.waterfall(shap_values[0], show=True)
     # If your scaler expects more features, add them here and define sliders
     features = np.array([[mdvp_fo, mdvp_fhi, mdvp_flo, jitter, shimmer, nhr, spread1, PPE]])
     st.write("Input shape:", features.shape)
