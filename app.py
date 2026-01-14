@@ -138,7 +138,7 @@ elif disease == "Parkinson's Disease":
     nhr = st.slider("NHR", 0.0, 1.0, 0.06, step=0.001)
 
     # If your scaler expects more features, add them here and define sliders
-    features = np.array([[mdvp_fo, jitter, shimmer, nhr]])
+    features = np.array([[mdvp_fo, mdvp_fhi, mdvp_flo, jitter, shimmer, nhr, spread1, PPE]])
     st.write("Input shape:", features.shape)
     st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
     scaled = scaler.transform(features)
