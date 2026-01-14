@@ -39,6 +39,8 @@ if disease == "Diabetes":
         age = st.slider("Age", 21, 81, 29)
 
     features = np.array([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]])
+    st.write("Input shape:", features.shape)
+    st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
@@ -76,6 +78,8 @@ elif disease == "Heart Disease":
 
     # Keep features consistent with your training pipeline (8 common features)
     features = np.array([[age, sex, cp, trestbps, chol, thalach, exang, oldpeak]])
+    st.write("Input shape:", features.shape)
+    st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown")) 
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
@@ -109,6 +113,8 @@ elif disease == "Liver Cirrhosis Stage":
 
     # Match your scaler’s training feature order/count
     features = np.array([[bilirubin, albumin, protime, ascites, age, edema, stage]])
+    st.write("Input shape:", features.shape)
+    st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown")) 
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
@@ -132,7 +138,9 @@ elif disease == "Parkinson's Disease":
     nhr = st.slider("NHR", 0.0, 1.0, 0.06, step=0.001)
 
     # If your scaler expects more features, add them here and define sliders
-    features = np.array([[mdvp_fo, jitter, shimmer, nhr]])
+    features = np.array([[mdvp_fo, jitter, shimmer, nhr, spread1, spread2, PPE]])
+    st.write("Input shape:", features.shape)
+    st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
     scaled = scaler.transform(features)
 
     if st.button("Predict"):
@@ -151,4 +159,5 @@ elif disease == "Parkinson's Disease":
 # ---------------- Footer ----------------
 st.markdown("---")
 st.caption("Built by you | XGBoost + SHAP")
+
 
