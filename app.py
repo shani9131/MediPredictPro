@@ -11,12 +11,12 @@ st.set_page_config(page_title="MediPredict Pro", page_icon="🧑‍⚕️", layo
 st.title("🧑‍⚕️ MediPredict Pro")
 st.markdown("### Multi-Disease Risk Prediction with Explainable AI")
 
-base_path = '/content/drive/MyDrive/Colab Notebooks/MediPredictPro/'
+base_path = './'
 
 @st.cache_resource
 def load_model(disease):
-    model = joblib.load(base_path + f'models/{disease}_model.pkl')
-    scaler = joblib.load(base_path + f'models/{disease}_scaler.pkl')
+    model = joblib.load(f'models/{disease}_model.pkl')
+    scaler = joblib.load(f'models/{disease}_scaler.pkl')
     return model, scaler
 
 # Sidebar always visible
