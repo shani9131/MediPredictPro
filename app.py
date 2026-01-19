@@ -102,23 +102,10 @@ elif disease == "Liver Cirrhosis Stage":
     st.header("Liver Cirrhosis Stage Prediction")
     model, scaler = load_model("cirrhosis")
 
+    # Numeric features
     ID = st.number_input("Patient ID", min_value=1, value=1)
     N_Days = st.slider("Days in Study", 0, 5000, 100)
-    Status = st.selectbox("Status", ("Censored", "CL", "D"))
-    Status = ["Censored", "CL", "D"].index(Status)
-    Drug = st.selectbox("Drug", ("D-penicillamine", "Placebo"))
-    Drug = 1 if Drug == "D-penicillamine" else 0
     Age = st.slider("Age", 20, 90, 50)
-    Sex = st.selectbox("Sex", ("Male", "Female"))
-    Sex = 1 if Sex == "Male" else 0
-    Ascites = st.selectbox("Ascites", ("No", "Yes"))
-    Ascites = 1 if Ascites == "Yes" else 0
-    Hepatomegaly = st.selectbox("Hepatomegaly", ("No", "Yes"))
-    Hepatomegaly = 1 if Hepatomegaly == "Yes" else 0
-    Spiders = st.selectbox("Spiders", ("No", "Yes"))
-    Spiders = 1 if Spiders == "Yes" else 0
-    Edema = st.selectbox("Edema", ("No", "Yes"))
-    Edema = 1 if Edema == "Yes" else 0
     Bilirubin = st.slider("Bilirubin", 0.0, 10.0, 1.2, step=0.1)
     Cholesterol = st.slider("Cholesterol", 100, 600, 200)
     Albumin = st.slider("Albumin", 1.0, 6.0, 3.5, step=0.1)
@@ -129,11 +116,35 @@ elif disease == "Liver Cirrhosis Stage":
     Platelets = st.slider("Platelets", 50, 600, 250)
     Prothrombin = st.slider("Prothrombin Time", 10, 20, 12)
 
-    # Build features in the SAME order as training dataset (19 features, no Stage)
-    features = np.array([[ID, N_Days, Status, Drug, Age, Sex, Ascites,
-                          Hepatomegaly, Spiders, Edema, Bilirubin, Cholesterol,
-                          Albumin, Copper, Alk_Phos, SGOT, Tryglicerides,
-                          Platelets, Prothrombin]])
+    # One-hot encoded categorical features
+    Status = st.selectbox("Status", ("Censored", "CL", "D"))
+    Status_CL = 1 if Status == "CL" else 0
+    Status_D = 1 if Status == "D" else 0
+
+    Drug = st.selectbox("Drug", ("D-penicillamine", "Placebo"))
+    Drug_Placebo = 1 if Drug == "Placebo" else 0
+
+    Sex = st.selectbox("Sex", ("Male", "Female"))
+    Sex_Male = 1 if Sex == "Male" else 0
+
+    Ascites = st.selectbox("Ascites", ("No", "Yes"))
+    Ascites_Yes = 1 if Ascites == "Yes" else 0
+
+    Hepatomegaly = st.selectbox("Hepatomegaly", ("No", "Yes"))
+    Hepatomegaly_Yes = 1 if Hepatomegaly == "Yes" else 0
+
+    Spiders = st.selectbox("Spiders", ("No", "Yes"))
+    Spiders_Yes = 1 if Spiders == "Yes" else 0
+
+    Edema = st.selectbox("Edema", ("No", "Yes"))
+    Edema_Yes = 1 if Edema == "Yes" else 0
+
+    # Build features in the SAME order as training (21 total)
+    features = np.array([[ID, N_Days, Age, Bilirubin, Cholesterol, Albumin,
+                          Copper, Alk_Phos, SGOT, Tryglicerides, Platelets,
+                          Prothrombin, Status_CL, Status_D, Drug_Placebo,
+                          Sex_Male, Ascites_Yes, Hepatomegaly_Yes,
+                          Spiders_Yes, Edema_Yes]])
 
     st.write("Input shape:", features.shape)
     st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
