@@ -134,12 +134,13 @@ elif disease == "Liver Cirrhosis Stage":
     Stage = st.slider("Stage", 1, 4, 2)
 
     # Build features in the SAME order as dataset
-    # placeholder for the missing feature
+    dummy = 0.0# placeholder for the missing feature
 
     features = np.array([[ID, N_Days, Status, Drug, Age, Sex, Ascites,
-                      Hepatomegaly, Spiders, Edema, Bilirubin, Cholesterol,
-                      Albumin, Copper, Alk_Phos, SGOT, Tryglicerides,
-                      Platelets, Prothrombin, Stage, dummy]])
+                          Hepatomegaly, Spiders, Edema, Bilirubin, Cholesterol,
+                          Albumin, Copper, Alk_Phos, SGOT, Tryglicerides,
+                          Platelets, Prothrombin, Stage]])
+
 
     st.write("Input shape:", features.shape)
     st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
