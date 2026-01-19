@@ -158,7 +158,7 @@ elif disease == "Liver Cirrhosis Stage":
         explainer = shap.Explainer(model)
         shap_values = explainer(scaled)
         st.subheader("Why this prediction?")
-        shap.plots.waterfall(shap_values[0], show=True)
+        shap.plots.bar(shap_values[0])
 
 
 # ---------------- Parkinson's ----------------
