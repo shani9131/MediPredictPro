@@ -134,9 +134,9 @@ elif disease == "Liver Cirrhosis Stage":
     Stage = st.slider("Stage", 1, 4, 2)
 
     # Build features in the SAME order as dataset
-    dummy = 0.0  # placeholder for the missing feature
+    # placeholder for the missing feature
 
-  features = np.array([[ID, N_Days, Status, Drug, Age, Sex, Ascites,
+    features = np.array([[ID, N_Days, Status, Drug, Age, Sex, Ascites,
                       Hepatomegaly, Spiders, Edema, Bilirubin, Cholesterol,
                       Albumin, Copper, Alk_Phos, SGOT, Tryglicerides,
                       Platelets, Prothrombin, Stage, dummy]])
