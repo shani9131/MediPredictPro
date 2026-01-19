@@ -125,26 +125,27 @@ elif disease == "Liver Cirrhosis Stage":
     Drug_Placebo = 1 if Drug == "Placebo" else 0
 
     Sex = st.selectbox("Sex", ("Male", "Female"))
-    Sex_Male = 1 if Sex == "Male" else 0
+    Sex_M = 1 if Sex == "Male" else 0
 
     Ascites = st.selectbox("Ascites", ("No", "Yes"))
-    Ascites_Yes = 1 if Ascites == "Yes" else 0
+    Ascites_Y = 1 if Ascites == "Yes" else 0
 
     Hepatomegaly = st.selectbox("Hepatomegaly", ("No", "Yes"))
-    Hepatomegaly_Yes = 1 if Hepatomegaly == "Yes" else 0
+    Hepatomegaly_Y = 1 if Hepatomegaly == "Yes" else 0
 
     Spiders = st.selectbox("Spiders", ("No", "Yes"))
-    Spiders_Yes = 1 if Spiders == "Yes" else 0
+    Spiders_Y = 1 if Spiders == "Yes" else 0
 
-    Edema = st.selectbox("Edema", ("No", "Yes"))
-    Edema_Yes = 1 if Edema == "Yes" else 0
+    Edema = st.selectbox("Edema", ("None", "S", "Y"))
+    Edema_S = 1 if Edema == "S" else 0
+    Edema_Y = 1 if Edema == "Y" else 0
 
-    # Build features in the SAME order as training (21 total)
+    # Build features in EXACT order of X_encoded.columns
     features = np.array([[ID, N_Days, Age, Bilirubin, Cholesterol, Albumin,
                           Copper, Alk_Phos, SGOT, Tryglicerides, Platelets,
                           Prothrombin, Status_CL, Status_D, Drug_Placebo,
-                          Sex_Male, Ascites_Yes, Hepatomegaly_Yes,
-                          Spiders_Yes, Edema_Yes]])
+                          Sex_M, Ascites_Y, Hepatomegaly_Y, Spiders_Y,
+                          Edema_S, Edema_Y]])
 
     st.write("Input shape:", features.shape)
     st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
