@@ -102,14 +102,12 @@ elif disease == "Liver Cirrhosis Stage":
     st.header("Liver Cirrhosis Stage Prediction")
     model, scaler = load_model("cirrhosis")
 
-    # Dataset features
     ID = st.number_input("Patient ID", min_value=1, value=1)
     N_Days = st.slider("Days in Study", 0, 5000, 100)
     Status = st.selectbox("Status", ("Censored", "CL", "D"))
     Status = ["Censored", "CL", "D"].index(Status)
     Drug = st.selectbox("Drug", ("D-penicillamine", "Placebo"))
     Drug = 1 if Drug == "D-penicillamine" else 0
-
     Age = st.slider("Age", 20, 90, 50)
     Sex = st.selectbox("Sex", ("Male", "Female"))
     Sex = 1 if Sex == "Male" else 0
@@ -121,7 +119,6 @@ elif disease == "Liver Cirrhosis Stage":
     Spiders = 1 if Spiders == "Yes" else 0
     Edema = st.selectbox("Edema", ("No", "Yes"))
     Edema = 1 if Edema == "Yes" else 0
-
     Bilirubin = st.slider("Bilirubin", 0.0, 10.0, 1.2, step=0.1)
     Cholesterol = st.slider("Cholesterol", 100, 600, 200)
     Albumin = st.slider("Albumin", 1.0, 6.0, 3.5, step=0.1)
@@ -131,16 +128,12 @@ elif disease == "Liver Cirrhosis Stage":
     Tryglicerides = st.slider("Triglycerides", 0, 500, 150)
     Platelets = st.slider("Platelets", 50, 600, 250)
     Prothrombin = st.slider("Prothrombin Time", 10, 20, 12)
-    Stage = st.slider("Stage", 1, 4, 2)
 
-    # Build features in the SAME order as dataset
-    dummy = 0.0# placeholder for the missing feature
-
+    # Build features in the SAME order as training dataset (19 features, no Stage)
     features = np.array([[ID, N_Days, Status, Drug, Age, Sex, Ascites,
                           Hepatomegaly, Spiders, Edema, Bilirubin, Cholesterol,
                           Albumin, Copper, Alk_Phos, SGOT, Tryglicerides,
-                          Platelets, Prothrombin, Stage]])
-
+                          Platelets, Prothrombin]])
 
     st.write("Input shape:", features.shape)
     st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
