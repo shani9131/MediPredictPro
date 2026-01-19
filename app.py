@@ -155,16 +155,12 @@ elif disease == "Liver Cirrhosis Stage":
         pred = model.predict(scaled)[0]
         st.success(f"Predicted Cirrhosis Stage: {pred}")
 
-        explainer = shap.Explainer(model, feature_names=[
-    'ID', 'N_Days', 'Age', 'Bilirubin', 'Cholesterol', 'Albumin', 'Copper',
-    'Alk_Phos', 'SGOT', 'Tryglicerides', 'Platelets', 'Prothrombin',
-    'Status_CL', 'Status_D', 'Drug_Placebo', 'Sex_M', 'Ascites_Y',
-    'Hepatomegaly_Y', 'Spiders_Y', 'Edema_S', 'Edema_Y'
-   ])
-   shap_values = explainer(scaled)
+        explainer = shap.Explainer(model)
+shap_values = explainer(scaled)
 
-   st.subheader("Why this prediction?")
-   shap.plots.bar(shap_values[0])
+st.subheader("Why this prediction?")
+# safer summary plot
+shap.plots.bar(shap_values[0])
 
 
 # ---------------- Parkinson's ----------------
