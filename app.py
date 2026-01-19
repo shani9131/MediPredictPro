@@ -102,17 +102,43 @@ elif disease == "Liver Cirrhosis Stage":
     st.header("Liver Cirrhosis Stage Prediction")
     model, scaler = load_model("cirrhosis")
 
-    bilirubin = st.slider("Bilirubin", 0.0, 10.0, 1.2, step=0.1)
-    albumin = st.slider("Albumin", 1.0, 6.0, 3.5, step=0.1)
-    protime = st.slider("Prothrombin Time", 10, 20, 12)
-    ascites = st.selectbox("Ascites", ("No", "Yes"))
-    ascites = 1 if ascites == "Yes" else 0
-    age = st.slider("Age", 20, 90, 50)
-    edema = st.selectbox("Edema", ("No", "Yes"))
-    edema = 1 if edema == "Yes" else 0
-    stage = st.slider("Stage", 1, 4, 2)
+    # Dataset features
+    ID = st.number_input("Patient ID", min_value=1, value=1)
+    N_Days = st.slider("Days in Study", 0, 5000, 100)
+    Status = st.selectbox("Status", ("Censored", "CL", "D"))
+    Status = ["Censored", "CL", "D"].index(Status)
+    Drug = st.selectbox("Drug", ("D-penicillamine", "Placebo"))
+    Drug = 1 if Drug == "D-penicillamine" else 0
 
-    features = np.array([[bilirubin, albumin, protime, ascites, age, edema, stage]])
+    Age = st.slider("Age", 20, 90, 50)
+    Sex = st.selectbox("Sex", ("Male", "Female"))
+    Sex = 1 if Sex == "Male" else 0
+    Ascites = st.selectbox("Ascites", ("No", "Yes"))
+    Ascites = 1 if Ascites == "Yes" else 0
+    Hepatomegaly = st.selectbox("Hepatomegaly", ("No", "Yes"))
+    Hepatomegaly = 1 if Hepatomegaly == "Yes" else 0
+    Spiders = st.selectbox("Spiders", ("No", "Yes"))
+    Spiders = 1 if Spiders == "Yes" else 0
+    Edema = st.selectbox("Edema", ("No", "Yes"))
+    Edema = 1 if Edema == "Yes" else 0
+
+    Bilirubin = st.slider("Bilirubin", 0.0, 10.0, 1.2, step=0.1)
+    Cholesterol = st.slider("Cholesterol", 100, 600, 200)
+    Albumin = st.slider("Albumin", 1.0, 6.0, 3.5, step=0.1)
+    Copper = st.slider("Copper", 0, 200, 50)
+    Alk_Phos = st.slider("Alk Phos", 0, 2000, 500)
+    SGOT = st.slider("SGOT", 0, 500, 100)
+    Tryglicerides = st.slider("Triglycerides", 0, 500, 150)
+    Platelets = st.slider("Platelets", 50, 600, 250)
+    Prothrombin = st.slider("Prothrombin Time", 10, 20, 12)
+    Stage = st.slider("Stage", 1, 4, 2)
+
+    # Build features in the SAME order as dataset
+    features = np.array([[ID, N_Days, Status, Drug, Age, Sex, Ascites,
+                          Hepatomegaly, Spiders, Edema, Bilirubin, Cholesterol,
+                          Albumin, Copper, Alk_Phos, SGOT, Tryglicerides,
+                          Platelets, Prothrombin, Stage]])
+
     st.write("Input shape:", features.shape)
     st.write("Scaler expects:", getattr(scaler, "n_features_in_", "unknown"))
     scaled = scaler.transform(features)
